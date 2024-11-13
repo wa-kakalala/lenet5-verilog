@@ -1,11 +1,20 @@
-// N = 16
-module conv55_16 #(parameter BIT_WIDTH = 8, OUT_WIDTH = 32) (
-		input clk, //rst,
-		input en,	// whether to latch or not
-		input signed[16*BIT_WIDTH-1:0] in1, in2, in3, in4, in5,
-		input signed[(BIT_WIDTH*25*16)-1:0] filter,	// 5x5xN filter
-		input signed[BIT_WIDTH-1:0] bias,	// 1 bias value
-		output signed[OUT_WIDTH-1:0] convValue	// size should increase to hold the sum of products
+/**************************************
+@ filename    : conv55_16.v
+@ author      : https://github.com/djtfoo/lenet5-verilog
+@ update      : yyrwkk
+@ create time : 2024/11/13 17:25:35
+@ version     : v1.0.0
+**************************************/
+module conv55_16 # (
+    parameter BIT_WIDTH = 8, 
+    parameter OUT_WIDTH = 32
+)(
+    input                                                    clk       , 
+    input                                                    en        ,	
+    input  signed[16*BIT_WIDTH-1:0]      in1, in2, in3, in4, in5       , // 5 input columns vector
+    input  signed[(BIT_WIDTH*25*16)-1:0]                     filter    , // 5x5xN filter
+    input  signed[BIT_WIDTH-1:0]                             bias      ,	
+    output signed[OUT_WIDTH-1:0]                             convValue	
 );
 
 // convert flattened input vectors into arrays
@@ -22,15 +31,18 @@ generate
 endgenerate
 
 // 16x 5*5*1 convolutions
-wire signed[OUT_WIDTH-1:0] conv[0:15];	// store outputs of each conv55
+wire signed [OUT_WIDTH-1:0] conv[0:15];	// store outputs of each conv55
 parameter SIZE = 25;	// 5x5 filter
 // generate 16x conv55 modules
 genvar gen;
 generate
 	for (gen = 0; gen < 16; gen = gen+1) begin : conv_module
-		conv55 #(.BIT_WIDTH(BIT_WIDTH), .OUT_WIDTH(OUT_WIDTH)) CONV (
+		conv55 #(
+            .BIT_WIDTH(BIT_WIDTH), 
+            .OUT_WIDTH(OUT_WIDTH)
+        ) conv55_inst (
 			.clk(clk), //.rst(rst),
-			.en(en),
+			.en (en ),
 			.in1(in1_arr[gen]), .in2(in2_arr[gen]), .in3(in3_arr[gen]), .in4(in4_arr[gen]), .in5(in5_arr[gen]),
 			.filter( filter[BIT_WIDTH*((gen+1)*SIZE)-1 : BIT_WIDTH*gen*SIZE] ),
 			.convValue(conv[gen])
@@ -56,18 +68,6 @@ generate
 	end
 endgenerate
 
-assign convValue = sums[12] + sums[13] + bias;
-
-/*// get sum of products
-reg signed[OUT_WIDTH-1:0] summations[0:N-3];	// intermediate sums
-integer x;
-always @ * begin
-	summations[0] = conv[0] + conv[1];	// first sum = conv[0] + conv[1]
-	for (x = 1; x < N-2; x = x+1) begin	// each convolution output
-		summations[x] = summations[x-1] + conv[x+1];	// next sum = curr sum + curr conv
-	end
-end
-
-assign convValue = summations[N-3] + conv[N-1] + bias;*/
+assign convValue = sums[12] + sums[13] + bias;	// add bias and output
 
 endmodule

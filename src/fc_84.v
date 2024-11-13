@@ -1,8 +1,8 @@
 // 84 inputs
 module fc_84 #(parameter BIT_WIDTH = 32, OUT_WIDTH = 64) (
-		input signed[BIT_WIDTH*84-1:0] in,
-		input signed[BIT_WIDTH*84-1:0] in_weights,
-		input signed[BIT_WIDTH-1:0] bias,
+		input  signed[BIT_WIDTH*84-1:0] in,
+		input  signed[BIT_WIDTH*84-1:0] in_weights,
+		input  signed[BIT_WIDTH-1:0]    bias,
 		output signed[OUT_WIDTH-1:0] out	// size should increase to hold the sum of products
 );
 
