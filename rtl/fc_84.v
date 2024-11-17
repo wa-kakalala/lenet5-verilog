@@ -1,9 +1,18 @@
-// 84 inputs
-module fc_84 #(parameter BIT_WIDTH = 32, OUT_WIDTH = 64) (
-		input  signed[BIT_WIDTH*84-1:0] in,
-		input  signed[BIT_WIDTH*84-1:0] in_weights,
-		input  signed[BIT_WIDTH-1:0]    bias,
-		output signed[OUT_WIDTH-1:0] out	// size should increase to hold the sum of products
+/**************************************
+@ filename    : fc_84.v
+@ author      : https://github.com/djtfoo/lenet5-verilog
+@ update      : yyrwkk
+@ create time : 2024/11/14 19:41:53
+@ version     : v1.0.0
+**************************************/
+module fc_84 #(  // full connection layer with 84 neurons
+    parameter BIT_WIDTH = 32 , 
+    parameter OUT_WIDTH = 64 
+)(
+	input  signed[BIT_WIDTH*84-1:0] in        ,
+	input  signed[BIT_WIDTH*84-1:0] in_weights,
+	input  signed[BIT_WIDTH-1:0]    bias      ,
+	output signed[OUT_WIDTH-1:0]    out         // size should increase to hold the sum of products
 );
 
 // convert flattened input vector into array
@@ -17,7 +26,7 @@ generate
 	end
 endgenerate
 
-// multiplications
+// multiply inputs and weights
 wire signed[OUT_WIDTH-1:0] mult[0:83];
 generate
 	for (i = 0; i < 84; i = i+1) begin : mult_84	// each input

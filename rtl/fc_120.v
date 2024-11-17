@@ -1,9 +1,18 @@
-// 120 inputs
-module fc_120 #(parameter BIT_WIDTH = 32, OUT_WIDTH = 64) (
-		input signed[BIT_WIDTH*120-1:0] in,
-		input signed[BIT_WIDTH*120-1:0] in_weights,
-		input signed[BIT_WIDTH-1:0] bias,
-		output signed[OUT_WIDTH-1:0] out	// size should increase to hold the sum of products
+/**************************************
+@ filename    : fc_120.v
+@ author      : https://github.com/djtfoo/lenet5-verilog
+@ update      : yyrwkk
+@ create time : 2024/11/14 19:45:44
+@ version     : v1.0.0
+**************************************/
+module fc_120 # ( // full connection layer with 120 neurons
+    parameter BIT_WIDTH = 32 ,  
+    parameter OUT_WIDTH = 64
+)(
+	input  signed[BIT_WIDTH*120-1:0] in        ,
+	input  signed[BIT_WIDTH*120-1:0] in_weights,
+	input  signed[BIT_WIDTH-1:0]     bias      ,
+	output signed[OUT_WIDTH-1:0]     out	     // size should increase to hold the sum of products
 );
 
 // convert flattened input vector into array
@@ -17,7 +26,7 @@ generate
 	end
 endgenerate
 
-// multiplications
+// multiply inputs and weights
 wire signed[OUT_WIDTH-1:0] mult[0:119];
 generate
 	for (i = 0; i < 120; i = i+1) begin : mult_120	// each input
