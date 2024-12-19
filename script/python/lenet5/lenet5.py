@@ -34,10 +34,40 @@ class lenet5(nn.Module):
     def forward(self, x):
         x = self.conv1(x)
         x = nn.functional.relu(x)
+        # for i in range(6):
+        #     for j in range(24):
+        #         for k in range(24):
+        #             print("%.3f" % (x[0][i][j][k].item()),end=' ')
+        #         print()
+        #     print()
+        
         x = self.pool1(x)
+        # for i in range(6):
+        #     for j in range(12):
+        #         for k in range(12):
+        #             print("%.6f" % (x[0][i][j][k].item()),end=' ')
+        #         print()
+        #     print()
         x = self.c3(x)
+        x = nn.functional.relu(x)
+        # for i in range(16):
+        #     for j in range(8):
+        #         for k in range(8):
+        #             print("%.3f" % (x[0][i][j][k].item()),end=' ')
+        #         print()
+        #     print()
         x = self.pool2(x)
+        # for i in range(16):
+        #     for j in range(4):
+        #         for k in range(4):
+        #             print("%.3f" % (x[0][i][j][k].item()),end=' ')
+        #         print()
+        #     print()
+        # for i in range(256):
+        #     print("%.3f" % (x.view(x.size(0), -1)[0][i].item()),end=' ')
         x = nn.functional.relu(self.fc1(x.view(x.size(0), -1)))
+        
+        # print(x)
         x = nn.functional.relu(self.fc2(x))
         x = self.fc3(x)
         return x

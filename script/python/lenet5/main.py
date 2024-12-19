@@ -12,6 +12,8 @@ import numpy as np
 from lenet5 import lenet5
 import argparse
 import hiddenlayer as hl
+from save_weights import save_weights
+from PIL import Image
 def get_data(path="./data",download=True,batch_size=32,show = False):
     # train dataset
     train_ds = torchvision.datasets.MNIST(
@@ -28,6 +30,10 @@ def get_data(path="./data",download=True,batch_size=32,show = False):
         transform=torchvision.transforms.ToTensor(), 
         download=True
     )
+
+    # save test_dataset 
+    # for idx, (img, label) in enumerate(test_ds):
+    #     plt.imsave(f"./data/test_img/{label}/test_img_{idx}.png", img.numpy().squeeze(), cmap='gray')
 
     print("train_ds.data.shape:",train_ds.data.shape)
     print("test_ds.data.shape:",test_ds.data.shape)
@@ -120,17 +126,25 @@ if __name__ == '__main__':
         train_model(model, train_dl, test_dl, epochs=10, lr=0.001)
         torch.save(model.state_dict(), "./model/model_weights.pth")
     else:
-        model.load_state_dict(torch.load("./model/model_weights.pth"))
+        model.load_state_dict(torch.load("./model/model_weights_acc0.99.pth"))
         _, test_dl = get_data(download=False, show=False)
         model.eval()
-        corrects = 0
-        for _, (b_x, b_y) in enumerate(test_dl):
-            output = model(b_x)
-            pred = torch.max(output, 1)[1]
-            corrects += (pred == b_y).sum().item()
+        # corrects = 0
+        # for _, (b_x, b_y) in enumerate(test_dl):
+        #     output = model(b_x)
+        #     pred = torch.max(output, 1)[1]
+        #     corrects += (pred == b_y).sum().item()
 
-        print('test accuracy: %.3f' % (corrects/len(test_dl.dataset)))
-    
+        # print('test accuracy: %.3f' % (corrects/len(test_dl.dataset)))
+        # save_weights(model,"./weights/")
+        img = Image.open('./data/test_img/test_img_9992.png').convert('L')
+        img_array = np.array(img)
+        print(img_array.shape)
+        data = torch.from_numpy(img_array) / 255.0
+        data = data.reshape(1,1,28,28)
+        output = model(data)
+        pred = torch.max(output, 1)[1]
+        print(pred.item())
 
     
     
