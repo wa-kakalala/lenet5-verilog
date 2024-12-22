@@ -5,7 +5,7 @@ function [precision,number] = lenet5(img,parameters)
         layer1_weight(i,1,:,:) = parameters.layer1.conv(i).weights;
     end
     layer1_bias = parameters.layer1.bias;
-
+   
     layer1 =  conv2d( reshape(img, [1, size(img)]),layer1_weight,layer1_bias,0,1);
     %%%%%%%%%% relu + maxpool
     layer1_relu = relu(layer1);
@@ -21,6 +21,7 @@ function [precision,number] = lenet5(img,parameters)
     for i = 1 : 16
         map = fm_mapping{i};
         conv_weights = zeros(1,length(map),5,5);
+        
         conv_weights(1,1,:,:) = parameters.layer2.conv(i).weights_0;
         conv_weights(1,2,:,:) = parameters.layer2.conv(i).weights_1;
         conv_weights(1,3,:,:) = parameters.layer2.conv(i).weights_2;
@@ -44,7 +45,7 @@ function [precision,number] = lenet5(img,parameters)
     end
 
     %%%%%%%%%% relu + maxpool
-    %     layer2_relu = relu(layer2);
+    % layer2_relu = relu(layer2);
     layer2_mp = maxpool(layer2,2,2);
 
     %%%%%%%%%% layer3 fc

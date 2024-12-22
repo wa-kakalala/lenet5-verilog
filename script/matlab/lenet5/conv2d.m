@@ -38,6 +38,8 @@ function output = conv2d(fm, weight, bias, padding, stride)
                 % 卷积操作：加权求和并加上偏置
                 w_shape = size( weight(k,:, :, :));
                 new_weight = reshape(weight(k,:, :, :),[w_shape(2),w_shape(3),w_shape(4)]);
+%                 disp( class( conv_region ) );
+%                 disp( class( new_weight ) );
                 output(k, i, j) = sum(sum(sum(conv_region .* new_weight))) + bias(k);
             end
         end

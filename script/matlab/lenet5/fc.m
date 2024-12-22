@@ -5,5 +5,6 @@ function output = fc(input, w, b)
     % output: 输出数据，大小为 [batch_size, output_size]
     
     % 计算全连接层的输出
-    output = input * w' + b';  % 使用矩阵乘法并加上偏置
+    % output = input * w' + b';  % 使用矩阵乘法并加上偏置
+    output = integer_mtimes(input,w') + b';
 end

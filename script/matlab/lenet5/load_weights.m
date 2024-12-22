@@ -1,6 +1,6 @@
 %{
 save format: 
-parameters.layers1
+parameters.layer1
     conv(1).weights
     conv(2).weights
     conv(3).weights
@@ -8,7 +8,7 @@ parameters.layers1
     conv(5).weights
     conv(6).weights
     bias   
-parameters.layers2
+parameters.layer2
     conv(1) ~ conv(6)
         weights_0
         weights_1
@@ -26,13 +26,13 @@ parameters.layers2
         weights_4
         weights_5
     bias  
-parameters.layers3
+parameters.layer3
     weights
     bias
-parameters.layers4
+parameters.layer4
     weights
     bias
-parameters.layers5
+parameters.layer5
     weights
     bias
 %}
